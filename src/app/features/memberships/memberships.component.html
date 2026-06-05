@@ -5,7 +5,7 @@
       <p class="mp-page__subtitle">Plans and active subscriptions</p>
     </div>
     <div class="mp-page__actions">
-      <button class="mp-btn mp-btn--primary">
+      <button class="mp-btn mp-btn--primary" (click)="openNewPlan()">
         <span class="material-icons" style="font-size:16px">add</span> New Plan
       </button>
     </div>
@@ -44,7 +44,7 @@
             <button class="mp-btn mp-btn--ghost" style="flex:1" (click)="togglePlanStatus(plan)">
               {{ plan.status === 'active' ? 'Deactivate' : 'Activate' }}
             </button>
-            <button class="mp-btn mp-btn--ghost">
+            <button class="mp-btn mp-btn--ghost" (click)="openEditPlan(plan)">
               <span class="material-icons" style="font-size:16px">edit</span>
             </button>
           </div>
@@ -103,3 +103,70 @@
     </div>
   }
 </div>
+
+@if (showDialog()) {
+  <div class="dialog-backdrop" (click)="showDialog.set(false)">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <div class="dialog__header">
+        <div>
+          <h2 class="dialog__title">{{ editingPlan() ? 'Edit Plan' : 'New Membership Plan' }}</h2>
+          <p class="dialog__subtitle">{{ editingPlan() ? 'Update plan details' : 'Create a new membership plan' }}</p>
+        </div>
+        <button class="dialog__close" (click)="showDialog.set(false)">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="dialog__body">
+
+        <div class="form-group">
+          <label class="form-label">Plan Name <span class="required">*</span></label>
+          <input class="form-input" type="text" placeholder="e.g. Monthly, Quarterly..." [(ngModel)]="planForm.name"/>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Duration</label>
+          <div class="duration-grid">
+            @for (opt of durationOptions; track opt.value) {
+              <button type="button" class="duration-btn"
+                [class.active]="planForm.duration === opt.value"
+                (click)="planForm.duration = opt.value; onDurationChange()">
+                {{ opt.label }}
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (planForm.duration === 'Custom') {
+          <div class="form-group">
+            <label class="form-label">Number of Days <span class="required">*</span></label>
+            <input class="form-input" type="number" placeholder="e.g. 45" [(ngModel)]="planForm.daysCount"/>
+          </div>
+        }
+
+        <div class="form-group">
+          <label class="form-label">Price (JD) <span class="required">*</span></label>
+          <div class="price-input-wrap">
+            <span class="price-currency">JD</span>
+            <input class="form-input price-input" type="number" placeholder="0.00" [(ngModel)]="planForm.price"/>
+          </div>
+        </div>
+
+        @if (planForm.price > 0 && planForm.daysCount > 0) {
+          <div class="plan-preview">
+            <span class="material-icons">info_outline</span>
+            <span>JD {{ planForm.price }} for {{ planForm.daysCount }} days
+              — JD {{ (planForm.price / planForm.daysCount * 30 | number:'1.0-1') }} / month</span>
+          </div>
+        }
+
+      </div>
+      <div class="dialog__footer">
+        <button class="mp-btn mp-btn--ghost" (click)="showDialog.set(false)">Cancel</button>
+        <button class="mp-btn mp-btn--primary" (click)="savePlan()">
+          <span class="material-icons" style="font-size:16px">check</span>
+          {{ editingPlan() ? 'Update Plan' : 'Create Plan' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

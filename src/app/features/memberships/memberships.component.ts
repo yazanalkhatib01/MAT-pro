@@ -1,5 +1,6 @@
 ﻿import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Plan {
   id: number; name: string; duration: string; daysCount: number;
@@ -15,13 +16,27 @@ interface ActiveMembership {
 @Component({
   selector: 'app-memberships',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './memberships.component.html',
   styleUrl: './memberships.component.scss',
 })
 export class MembershipsComponent {
 
-  activeTab = signal<'plans' | 'active'>('plans');
+  activeTab  = signal<'plans' | 'active'>('plans');
+  showDialog = signal(false);
+  editingPlan = signal<Plan | null>(null);
+
+  planForm = {
+    name: '', duration: '', daysCount: 0, price: 0,
+  };
+
+  durationOptions = [
+    { label: '1 Month',   value: '1 Month',   days: 30  },
+    { label: '3 Months',  value: '3 Months',  days: 90  },
+    { label: '6 Months',  value: '6 Months',  days: 180 },
+    { label: '12 Months', value: '12 Months', days: 365 },
+    { label: 'Custom',    value: 'Custom',    days: 0   },
+  ];
 
   plans = signal<Plan[]>([
     { id:1, name:'Monthly',     duration:'1 Month',   daysCount:30,  price:45,  status:'active', memberCount:58 },
@@ -39,14 +54,66 @@ export class MembershipsComponent {
   ]);
 
   totalActiveRevenue = computed(() =>
-    this.activeMemberships()
-      .filter(m => m.status !== 'expired')
-      .reduce((s, m) => s + m.price, 0)
+    this.activeMemberships().filter(m => m.status !== 'expired').reduce((s,m) => s + m.price, 0)
   );
 
   expiringCount = computed(() =>
     this.activeMemberships().filter(m => m.status === 'expiring').length
   );
+
+  openNewPlan(): void {
+    this.editingPlan.set(null);
+    this.planForm = { name:'', duration:'', daysCount:0, price:0 };
+    this.showDialog.set(true);
+  }
+
+  openEditPlan(plan: Plan): void {
+    this.editingPlan.set(plan);
+    this.planForm = { name:plan.name, duration:plan.duration, daysCount:plan.daysCount, price:plan.price };
+    this.showDialog.set(true);
+  }
+
+  onDurationChange(): void {
+    const found = this.durationOptions.find(d => d.value === this.planForm.duration);
+    if (found && found.days > 0) {
+      this.planForm.daysCount = found.days;
+    }
+  }
+
+  savePlan(): void {
+    if (!this.planForm.name.trim() || !this.planForm.price) return;
+
+    const editing = this.editingPlan();
+    if (editing) {
+      this.plans.update(list =>
+        list.map(p => p.id === editing.id
+          ? { ...p, name:this.planForm.name, duration:this.planForm.duration, daysCount:this.planForm.daysCount, price:this.planForm.price }
+          : p
+        )
+      );
+    } else {
+      const newPlan: Plan = {
+        id:          this.plans().length + 1,
+        name:        this.planForm.name,
+        duration:    this.planForm.duration,
+        daysCount:   this.planForm.daysCount,
+        price:       this.planForm.price,
+        status:      'active',
+        memberCount: 0,
+      };
+      this.plans.update(list => [...list, newPlan]);
+    }
+    this.showDialog.set(false);
+  }
+
+  togglePlanStatus(plan: Plan): void {
+    this.plans.update(list =>
+      list.map(p => p.id === plan.id
+        ? { ...p, status: p.status === 'active' ? 'inactive' : 'active' }
+        : p
+      )
+    );
+  }
 
   getInitials(name: string): string {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -65,14 +132,5 @@ export class MembershipsComponent {
     if (status === 'expired')  return '#E24B4A';
     if (status === 'expiring') return '#EF9F27';
     return '#639922';
-  }
-
-  togglePlanStatus(plan: Plan): void {
-    this.plans.update(plans =>
-      plans.map(p => p.id === plan.id
-        ? { ...p, status: p.status === 'active' ? 'inactive' : 'active' }
-        : p
-      )
-    );
   }
 }
