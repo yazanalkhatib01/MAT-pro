@@ -1,0 +1,114 @@
+﻿<div class="login-page">
+
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <div class="login-logo__icon">
+        <span class="material-icons">shield</span>
+      </div>
+      <div class="login-logo__text">MAT<span>PRO</span></div>
+    </div>
+
+    <h1 class="login-title">Welcome back</h1>
+    <p class="login-subtitle">Sign in to your club dashboard</p>
+
+    <!-- Login Error -->
+    @if (loginError()) {
+      <div class="login-error-banner">
+        <span class="material-icons">error_outline</span>
+        {{ loginError() }}
+      </div>
+    }
+
+    <!-- Form -->
+    <div class="login-form">
+
+      <!-- Email -->
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <div class="form-input-wrap" [class.error]="errors.email">
+          <span class="material-icons form-icon">mail_outline</span>
+          <input
+            type="email"
+            placeholder="admin@matpro.com"
+            [(ngModel)]="form.email"
+            (keyup.enter)="onSubmit()"
+            autocomplete="email"
+          />
+        </div>
+        @if (errors.email) {
+          <span class="form-error"><span class="material-icons">warning</span>{{ errors.email }}</span>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <div class="form-label-row">
+          <label class="form-label">Password</label>
+          <a class="forgot-link" href="#">Forgot password?</a>
+        </div>
+        <div class="form-input-wrap" [class.error]="errors.password">
+          <span class="material-icons form-icon">lock_outline</span>
+          <input
+            [type]="showPassword() ? 'text' : 'password'"
+            placeholder="••••••••"
+            [(ngModel)]="form.password"
+            (keyup.enter)="onSubmit()"
+            autocomplete="current-password"
+          />
+          <button class="form-eye-btn" type="button" (click)="togglePassword()">
+            <span class="material-icons">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+        @if (errors.password) {
+          <span class="form-error"><span class="material-icons">warning</span>{{ errors.password }}</span>
+        }
+      </div>
+
+      <!-- Remember Me -->
+      <label class="remember-row">
+        <input type="checkbox" [(ngModel)]="form.remember" />
+        <span class="remember-label">Remember me for 30 days</span>
+      </label>
+
+      <!-- Submit -->
+      <button
+        class="login-btn"
+        [class.loading]="isLoading()"
+        [disabled]="isLoading()"
+        (click)="onSubmit()">
+        @if (isLoading()) {
+          <span class="material-icons spinning">autorenew</span>
+          Signing in...
+        } @else {
+          Sign in
+          <span class="material-icons">arrow_forward</span>
+        }
+      </button>
+
+    </div>
+
+    <!-- Demo hint -->
+    <div class="login-hint">
+      <span class="material-icons">info_outline</span>
+      Demo: admin&#64;matpro.com / admin123
+    </div>
+
+  </div>
+
+  <!-- Right Panel -->
+  <div class="login-panel">
+    <div class="login-panel__content">
+      <div class="login-panel__badge">MatPro v1.0</div>
+      <h2 class="login-panel__title">Manage your martial arts club with ease</h2>
+      <p class="login-panel__desc">Track members, memberships, payments and more — all in one place.</p>
+      <div class="login-panel__stats">
+        <div class="login-panel__stat"><div class="login-panel__stat-value">142</div><div class="login-panel__stat-label">Members</div></div>
+        <div class="login-panel__stat"><div class="login-panel__stat-value">JD 4,280</div><div class="login-panel__stat-label">Monthly Revenue</div></div>
+        <div class="login-panel__stat"><div class="login-panel__stat-value">7</div><div class="login-panel__stat-label">Sports</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
