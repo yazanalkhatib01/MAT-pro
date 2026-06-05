@@ -1,0 +1,134 @@
+﻿<div class="mp-page">
+  <div class="mp-page__header">
+    <div>
+      <h1 class="mp-page__title">Offers & Promotions</h1>
+      <p class="mp-page__subtitle">Manage discounts and marketing campaigns</p>
+    </div>
+    <div class="mp-page__actions">
+      <button class="mp-btn mp-btn--primary" (click)="showDialog.set(true)">
+        <span class="material-icons" style="font-size:16px">add</span> New Offer
+      </button>
+    </div>
+  </div>
+
+  <div class="mp-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:22px">
+    <div class="off__stat"><div class="off__stat-label">Total Offers</div><div class="off__stat-value">{{ offers().length }}</div></div>
+    <div class="off__stat"><div class="off__stat-label">Active Now</div><div class="off__stat-value" style="color:#3B6D11">{{ activeCount() }}</div></div>
+    <div class="off__stat"><div class="off__stat-label">Scheduled</div><div class="off__stat-value" style="color:#185FA5">{{ scheduledCount() }}</div></div>
+    <div class="off__stat"><div class="off__stat-label">Expired</div><div class="off__stat-value" style="color:#9898A8">{{ expiredCount() }}</div></div>
+  </div>
+
+  <div class="off__filters">
+    @for (f of filters; track f.value) {
+      <button class="off__filter-btn" [class.active]="activeFilter() === f.value" (click)="activeFilter.set(f.value)">
+        {{ f.label }}
+      </button>
+    }
+  </div>
+
+  <div class="off__grid">
+    @for (offer of filteredOffers(); track offer.id) {
+      <div class="off__card" [class]="'off__card--' + offer.status">
+        <div class="off__card-header">
+          <div class="off__discount-badge">
+            @if (offer.discountType === 'percentage') {
+              {{ offer.discountValue }}% OFF
+            } @else {
+              JD {{ offer.discountValue }} OFF
+            }
+          </div>
+          <span class="mp-badge"
+            [class.mp-badge--active]="offer.status === 'active'"
+            [class.mp-badge--info]="offer.status === 'scheduled'"
+            [class.mp-badge--expired]="offer.status === 'expired'">
+            {{ offer.status }}
+          </span>
+        </div>
+
+        <h3 class="off__name">{{ offer.name }}</h3>
+        @if (offer.description) {
+          <p class="off__desc">{{ offer.description }}</p>
+        }
+
+        <div class="off__dates">
+          <div class="off__date-row">
+            <span class="material-icons">calendar_today</span>
+            <span>{{ offer.startDate }}</span>
+            <span class="material-icons">arrow_forward</span>
+            <span>{{ offer.endDate }}</span>
+          </div>
+        </div>
+
+        <div class="off__card-footer">
+          <button class="mp-btn mp-btn--ghost" style="flex:1;font-size:12px">
+            <span class="material-icons" style="font-size:14px">edit</span> Edit
+          </button>
+          <button class="mp-btn mp-btn--ghost" style="font-size:12px;color:var(--mp-danger-text)">
+            <span class="material-icons" style="font-size:14px">delete</span>
+          </button>
+        </div>
+      </div>
+    } @empty {
+      <div class="off__empty">
+        <span class="material-icons">local_offer</span>
+        <p>No offers found</p>
+        <button class="mp-btn mp-btn--primary" (click)="showDialog.set(true)">Create First Offer</button>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showDialog()) {
+  <div class="dialog-backdrop" (click)="showDialog.set(false)">
+    <div class="dialog" (click)="$event.stopPropagation()">
+      <div class="dialog__header">
+        <div>
+          <h2 class="dialog__title">New Offer</h2>
+          <p class="dialog__subtitle">Create a new discount or promotion</p>
+        </div>
+        <button class="dialog__close" (click)="showDialog.set(false)">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="dialog__body">
+        <div class="form-group">
+          <label class="form-label">Offer Name <span class="required">*</span></label>
+          <input class="form-input" type="text" placeholder="e.g. Summer Discount" [(ngModel)]="newOffer.name"/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Discount Type</label>
+            <select class="form-input" [(ngModel)]="newOffer.discountType">
+              <option value="percentage">Percentage (%)</option>
+              <option value="fixed">Fixed Amount (JD)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Discount Value</label>
+            <input class="form-input" type="number" placeholder="e.g. 20" [(ngModel)]="newOffer.discountValue"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Start Date</label>
+            <input class="form-input" type="date" [(ngModel)]="newOffer.startDate"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">End Date</label>
+            <input class="form-input" type="date" [(ngModel)]="newOffer.endDate"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-input form-textarea" placeholder="Describe the offer..." [(ngModel)]="newOffer.description" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="dialog__footer">
+        <button class="mp-btn mp-btn--ghost" (click)="showDialog.set(false)">Cancel</button>
+        <button class="mp-btn mp-btn--primary" (click)="saveOffer()">
+          <span class="material-icons" style="font-size:16px">check</span> Save Offer
+        </button>
+      </div>
+    </div>
+  </div>
+}
