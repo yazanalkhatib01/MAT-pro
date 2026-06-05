@@ -1,0 +1,183 @@
+﻿<div class="mp-page">
+
+  <!-- Back + Actions -->
+  <div class="prof__topbar">
+    <button class="prof__back-btn" (click)="goBack()">
+      <span class="material-icons">arrow_back</span>
+      Back to Members
+    </button>
+    <div class="mp-page__actions">
+      <button class="mp-btn mp-btn--ghost">
+        <span class="material-icons" style="font-size:15px">edit</span> Edit
+      </button>
+      <button class="mp-btn mp-btn--ghost" style="color:var(--mp-danger-text)">
+        <span class="material-icons" style="font-size:15px">delete</span> Delete
+      </button>
+    </div>
+  </div>
+
+  @if (member(); as m) {
+
+    <div class="prof__layout">
+
+      <!-- Left: Profile Card -->
+      <div class="prof__sidebar">
+
+        <div class="mp-card prof__hero-card">
+          <div class="prof__avatar-wrap">
+            <div class="prof__avatar" [style.background]="getAvatarColor(m.fullName)">
+              {{ getInitials(m.fullName) }}
+            </div>
+            <span class="mp-badge prof__status-badge"
+              [class.mp-badge--active]="m.status === 'active'"
+              [class.mp-badge--expiring]="m.status === 'expiring'"
+              [class.mp-badge--expired]="m.status === 'expired'">
+              {{ m.status }}
+            </span>
+          </div>
+          <h2 class="prof__name">{{ m.fullName }}</h2>
+          <p class="prof__sport">{{ m.sport?.name }}</p>
+          <p class="prof__since">Member since {{ memberSince() }}</p>
+
+          <div class="prof__contact-list">
+            <div class="prof__contact-row">
+              <span class="material-icons">phone</span>
+              <span>{{ m.phone }}</span>
+            </div>
+            @if (m.email) {
+              <div class="prof__contact-row">
+                <span class="material-icons">mail_outline</span>
+                <span>{{ m.email }}</span>
+              </div>
+            }
+            @if (m.dateOfBirth) {
+              <div class="prof__contact-row">
+                <span class="material-icons">cake</span>
+                <span>{{ m.dateOfBirth }}</span>
+              </div>
+            }
+            <div class="prof__contact-row">
+              <span class="material-icons">wc</span>
+              <span>{{ m.gender | titlecase }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Membership Card -->
+        @if (membership(); as ms) {
+          <div class="mp-card prof__membership-card">
+            <div class="mp-card-header">
+              <span class="mp-card-title">Current Membership</span>
+              <button class="prof__renew-btn">Renew</button>
+            </div>
+            <div class="mp-card-body">
+              <div class="prof__plan-name">{{ ms.plan?.name }} Plan</div>
+              <div class="prof__plan-price">JD {{ ms.finalPrice }}<span>/month</span></div>
+              <div class="prof__plan-dates">
+                <span>{{ ms.startDate }}</span>
+                <span class="material-icons">arrow_forward</span>
+                <span>{{ ms.endDate }}</span>
+              </div>
+              <div class="prof__days-wrap">
+                <div class="prof__days-label">
+                  <span>{{ ms.daysLeft }} days remaining</span>
+                  <span>{{ getDaysPercent(ms.daysLeft) }}%</span>
+                </div>
+                <div class="prof__days-track">
+                  <div class="prof__days-fill"
+                    [style.width.%]="getDaysPercent(ms.daysLeft)"
+                    [class.low]="ms.daysLeft <= 7">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Stats -->
+        <div class="prof__stats-grid">
+          <div class="prof__stat-card">
+            <div class="prof__stat-value">{{ payments().length }}</div>
+            <div class="prof__stat-label">Payments</div>
+          </div>
+          <div class="prof__stat-card">
+            <div class="prof__stat-value">JD {{ totalPaid() }}</div>
+            <div class="prof__stat-label">Total Paid</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: Tabs -->
+      <div class="prof__main">
+
+        <div class="prof__tabs">
+          <button class="prof__tab" [class.active]="activeTab() === 'overview'"  (click)="activeTab.set('overview')">Overview</button>
+          <button class="prof__tab" [class.active]="activeTab() === 'payments'"  (click)="activeTab.set('payments')">Payment History</button>
+          <button class="prof__tab" [class.active]="activeTab() === 'notes'"     (click)="activeTab.set('notes')">Notes</button>
+        </div>
+
+        @if (activeTab() === 'overview') {
+          <div class="mp-card">
+            <div class="mp-card-header"><span class="mp-card-title">Personal Information</span></div>
+            <div class="mp-card-body">
+              <div class="prof__info-grid">
+                <div class="prof__info-item"><div class="prof__info-label">Full Name</div><div class="prof__info-value">{{ m.fullName }}</div></div>
+                <div class="prof__info-item"><div class="prof__info-label">Phone</div><div class="prof__info-value">{{ m.phone }}</div></div>
+                <div class="prof__info-item"><div class="prof__info-label">Email</div><div class="prof__info-value">{{ m.email || '—' }}</div></div>
+                <div class="prof__info-item"><div class="prof__info-label">Date of Birth</div><div class="prof__info-value">{{ m.dateOfBirth || '—' }}</div></div>
+                <div class="prof__info-item"><div class="prof__info-label">Gender</div><div class="prof__info-value">{{ m.gender | titlecase }}</div></div>
+                <div class="prof__info-item"><div class="prof__info-label">Sport</div><div class="prof__info-value">{{ m.sport?.name }}</div></div>
+                <div class="prof__info-item"><div class="prof__info-label">Member ID</div><div class="prof__info-value">#{{ m.id }}</div></div>
+                <div class="prof__info-item"><div class="prof__info-label">Joined</div><div class="prof__info-value">{{ m.createdAt }}</div></div>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (activeTab() === 'payments') {
+          <div class="mp-card">
+            <div class="mp-card-header"><span class="mp-card-title">Payment History</span></div>
+            <table class="prof__table">
+              <thead>
+                <tr><th>Invoice</th><th>Plan</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                @for (p of payments(); track p.id) {
+                  <tr>
+                    <td class="prof__invoice">{{ p.invoiceNumber }}</td>
+                    <td class="prof__muted">{{ p.planName }}</td>
+                    <td class="prof__amount">JD {{ p.finalAmount }}</td>
+                    <td>
+                      <div class="prof__method">
+                        <span class="material-icons">{{ getMethodIcon(p.method) }}</span>
+                        {{ p.method }}
+                      </div>
+                    </td>
+                    <td class="prof__muted">{{ p.paidAt }}</td>
+                    <td><span class="mp-badge mp-badge--active">{{ p.status }}</span></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+        @if (activeTab() === 'notes') {
+          <div class="mp-card">
+            <div class="mp-card-header">
+              <span class="mp-card-title">Notes</span>
+              <button class="mp-btn mp-btn--ghost" style="font-size:12px;padding:4px 10px">
+                <span class="material-icons" style="font-size:14px">edit</span> Edit
+              </button>
+            </div>
+            <div class="mp-card-body">
+              <p class="prof__notes-text">{{ m.notes || 'No notes added yet.' }}</p>
+            </div>
+          </div>
+        }
+
+      </div>
+    </div>
+  }
+</div>

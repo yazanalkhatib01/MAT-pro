@@ -1,12 +1,13 @@
 ﻿import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Member } from '../../../shared/models';
 import { MemberFormDialogComponent } from '../member-form-dialog/member-form-dialog.component';
 
 @Component({
   selector: 'app-members-list',
   standalone: true,
-  imports: [CommonModule, MemberFormDialogComponent],
+  imports: [CommonModule, MemberFormDialogComponent, RouterLink],
   templateUrl: './members-list.component.html',
   styleUrl: './members-list.component.scss',
 })
@@ -88,3 +89,4 @@ export class MembersListComponent {
     return sports[id] ?? '';
   }
 }
+
