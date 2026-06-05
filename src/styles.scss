@@ -1,1 +1,209 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --mp-brand: #c8392b;
+  --mp-brand-dark: #9b2b1f;
+  --mp-brand-light: #faece7;
+  --mp-font-display: 'Syne', sans-serif;
+  --mp-font-body: 'DM Sans', sans-serif;
+  --mp-bg-page: #f4f5f7;
+  --mp-bg-card: #ffffff;
+  --mp-bg-surface: #f8f9fa;
+  --mp-border: rgba(0, 0, 0, 0.08);
+  --mp-border-strong: rgba(0, 0, 0, 0.14);
+  --mp-text-primary: #1a1a1a;
+  --mp-text-secondary: #5c5c6e;
+  --mp-text-muted: #9898a8;
+  --mp-success-bg: #eaf3de;
+  --mp-success-text: #3b6d11;
+  --mp-warning-bg: #faeeda;
+  --mp-warning-text: #854f0b;
+  --mp-danger-bg: #fcebeb;
+  --mp-danger-text: #a32d2d;
+  --mp-info-bg: #e6f1fb;
+  --mp-info-text: #185fa5;
+  --mp-sidebar-width: 220px;
+  --mp-topbar-height: 56px;
+  --mp-radius-sm: 4px;
+  --mp-radius-md: 8px;
+  --mp-radius-lg: 12px;
+  --mp-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mp-font-body);
+  font-size: 14px;
+  color: var(--mp-text-primary);
+  background: var(--mp-bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+// Utility classes
+.mp-card {
+  background: var(--mp-bg-card);
+  border: 1px solid var(--mp-border);
+  border-radius: var(--mp-radius-lg);
+  box-shadow: var(--mp-shadow-sm);
+}
+
+.mp-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--mp-border);
+
+  .mp-card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mp-text-primary);
+    margin: 0;
+  }
+}
+
+.mp-card-body {
+  padding: 16px 18px;
+}
+
+.mp-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+
+  &--active {
+    background: var(--mp-success-bg);
+    color: var(--mp-success-text);
+  }
+  &--expiring {
+    background: var(--mp-warning-bg);
+    color: var(--mp-warning-text);
+  }
+  &--expired {
+    background: var(--mp-danger-bg);
+    color: var(--mp-danger-text);
+  }
+  &--info {
+    background: var(--mp-info-bg);
+    color: var(--mp-info-text);
+  }
+}
+
+.mp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: var(--mp-radius-md);
+  font-family: var(--mp-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+
+  &--primary {
+    background: var(--mp-brand);
+    color: #fff;
+    border-color: var(--mp-brand);
+    &:hover {
+      background: var(--mp-brand-dark);
+    }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: var(--mp-text-secondary);
+    border-color: var(--mp-border-strong);
+    &:hover {
+      background: var(--mp-bg-surface);
+    }
+  }
+}
+
+.mp-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+  font-family: var(--mp-font-display);
+
+  &--sm {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+  &--lg {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+  }
+}
+
+.mp-page {
+  padding: 24px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 22px;
+  }
+
+  &__title {
+    font-family: var(--mp-font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--mp-text-primary);
+    margin: 0 0 3px;
+  }
+
+  &__subtitle {
+    font-size: 12px;
+    color: var(--mp-text-muted);
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+}
+
+.mp-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--mp-border-strong);
+  border-radius: 10px;
+}

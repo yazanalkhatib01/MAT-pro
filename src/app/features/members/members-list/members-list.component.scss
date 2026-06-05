@@ -1,0 +1,216 @@
+﻿.members {
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 300px;
+    height: 36px;
+    background: var(--mp-bg-card);
+    border: 1px solid var(--mp-border-strong);
+    border-radius: var(--mp-radius-md);
+    padding: 0 12px;
+    transition: border-color 0.15s;
+
+    &:focus-within {
+      border-color: var(--mp-brand);
+    }
+
+    .material-icons { font-size: 18px; color: var(--mp-text-muted); }
+
+    input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 13px;
+      outline: none;
+      font-family: var(--mp-font-body);
+      color: var(--mp-text-primary);
+      &::placeholder { color: var(--mp-text-muted); }
+    }
+  }
+
+  &__filters {
+    display: flex;
+    gap: 6px;
+  }
+
+  &__filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border: 1px solid var(--mp-border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mp-text-secondary);
+    background: var(--mp-bg-card);
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: var(--mp-font-body);
+
+    &:hover { border-color: var(--mp-border-strong); color: var(--mp-text-primary); }
+
+    &.active {
+      background: var(--mp-brand-light);
+      color: var(--mp-brand);
+      border-color: var(--mp-brand);
+    }
+  }
+
+  &__filter-count {
+    background: var(--mp-bg-surface);
+    padding: 0 5px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--mp-text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 10px 16px 10px;
+      background: var(--mp-bg-surface);
+      border-bottom: 1px solid var(--mp-border);
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--mp-border);
+      vertical-align: middle;
+      font-size: 13px;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:hover td { background: var(--mp-bg-surface); }
+
+    .members__actions { opacity: 0; transition: opacity 0.12s; }
+    tr:hover .members__actions { opacity: 1; }
+  }
+
+  &__member-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__name   { font-weight: 500; color: var(--mp-text-primary); }
+  &__id     { font-size: 11px; color: var(--mp-text-muted); }
+  &__muted  { color: var(--mp-text-secondary); }
+
+  &__sport-tag {
+    display: inline-block;
+    padding: 3px 9px;
+    background: var(--mp-bg-surface);
+    border: 1px solid var(--mp-border);
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--mp-text-secondary);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__action-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--mp-radius-sm);
+    border: 1px solid var(--mp-border);
+    background: var(--mp-bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--mp-text-secondary);
+    transition: all 0.12s;
+
+    .material-icons { font-size: 15px; }
+
+    &:hover {
+      background: var(--mp-brand-light);
+      color: var(--mp-brand);
+      border-color: var(--mp-brand);
+    }
+
+    &--danger:hover {
+      background: var(--mp-danger-bg);
+      color: var(--mp-danger-text);
+      border-color: var(--mp-danger-text);
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 48px !important;
+    color: var(--mp-text-muted);
+
+    .material-icons { font-size: 36px; display: block; margin-bottom: 8px; }
+    p { font-size: 13px; margin: 0; }
+  }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--mp-border);
+  }
+
+  &__pagination-info {
+    font-size: 12px;
+    color: var(--mp-text-muted);
+  }
+
+  &__pagination-btns {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__page-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--mp-radius-sm);
+    border: 1px solid var(--mp-border);
+    background: var(--mp-bg-card);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mp-text-secondary);
+    transition: all 0.12s;
+    font-family: var(--mp-font-body);
+
+    .material-icons { font-size: 16px; }
+
+    &:hover { background: var(--mp-bg-surface); }
+
+    &--active {
+      background: var(--mp-brand);
+      color: #fff;
+      border-color: var(--mp-brand);
+    }
+  }
+}

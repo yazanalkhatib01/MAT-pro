@@ -1,0 +1,136 @@
+﻿<div class="mp-page">
+  <div class="mp-page__header">
+    <div>
+      <h1 class="mp-page__title">Dashboard</h1>
+      <p class="mp-page__subtitle">{{ today }}</p>
+    </div>
+    <div class="mp-page__actions">
+      <a routerLink="/members" class="mp-btn mp-btn--primary">
+        <span class="material-icons" style="font-size:16px">add</span>
+        Add Member
+      </a>
+    </div>
+  </div>
+
+  <div class="mp-metrics">
+    <div class="dash__metric">
+      <div class="dash__metric-icon" style="background:#EAF3DE;color:#3B6D11"><span class="material-icons">group</span></div>
+      <div>
+        <div class="dash__metric-label">Total Members</div>
+        <div class="dash__metric-value">{{ stats().totalMembers }}</div>
+        <div class="dash__metric-delta up">+8 this month</div>
+      </div>
+    </div>
+    <div class="dash__metric">
+      <div class="dash__metric-icon" style="background:#E6F1FB;color:#185FA5"><span class="material-icons">card_membership</span></div>
+      <div>
+        <div class="dash__metric-label">Active Memberships</div>
+        <div class="dash__metric-value">{{ stats().activeMembers }}</div>
+        <div class="dash__metric-delta up">83% of total</div>
+      </div>
+    </div>
+    <div class="dash__metric">
+      <div class="dash__metric-icon" style="background:#FAEEDA;color:#854F0B"><span class="material-icons">schedule</span></div>
+      <div>
+        <div class="dash__metric-label">Expiring Soon</div>
+        <div class="dash__metric-value">{{ stats().expiringThisWeek }}</div>
+        <div class="dash__metric-delta warn">Within 7 days</div>
+      </div>
+    </div>
+    <div class="dash__metric">
+      <div class="dash__metric-icon" style="background:#FAECE7;color:#C8392B"><span class="material-icons">payments</span></div>
+      <div>
+        <div class="dash__metric-label">Monthly Revenue</div>
+        <div class="dash__metric-value">JD {{ stats().monthlyRevenue | number }}</div>
+        <div class="dash__metric-delta up">+{{ stats().revenueGrowth }}% vs last</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dash__quick-actions">
+    <a routerLink="/members"     class="dash__qa"><span class="material-icons">person_add</span><span>Add Member</span></a>
+    <a routerLink="/payments"    class="dash__qa"><span class="material-icons">receipt_long</span><span>New Payment</span></a>
+    <a routerLink="/memberships" class="dash__qa"><span class="material-icons">autorenew</span><span>Renew Plan</span></a>
+    <a routerLink="/reports"     class="dash__qa"><span class="material-icons">bar_chart</span><span>View Reports</span></a>
+  </div>
+
+  <div class="dash__two-col">
+    <div class="mp-card">
+      <div class="mp-card-header">
+        <span class="mp-card-title">Recent Payments</span>
+        <a routerLink="/payments" class="dash__link">See all</a>
+      </div>
+      <table class="dash__table">
+        <thead>
+          <tr><th>Member</th><th>Plan</th><th>Amount</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          @for (p of payments(); track p.id) {
+            <tr>
+              <td>
+                <div class="dash__member-cell">
+                  <div class="mp-avatar mp-avatar--sm" [style.background]="getAvatarColor(p.member?.fullName || '')">
+                    {{ getInitials(p.member?.fullName || '') }}
+                  </div>
+                  <div>
+                    <div class="dash__member-name">{{ p.member?.fullName }}</div>
+                    <div class="dash__member-sport">{{ p.member?.sport?.name }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="dash__muted">{{ p.planName }}</td>
+              <td class="dash__strong">JD {{ p.finalAmount }}</td>
+              <td>
+                <span class="mp-badge"
+                  [class.mp-badge--active]="p.status === 'paid'"
+                  [class.mp-badge--expiring]="p.status === 'pending'">
+                  {{ p.status }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mp-card">
+      <div class="mp-card-header">
+        <span class="mp-card-title">Expiring Soon</span>
+        <span class="dash__meta">Next 7 days</span>
+      </div>
+      <div class="mp-card-body" style="padding:10px 14px">
+        @for (item of expiring(); track item.membershipId) {
+          <div class="dash__expiry-item">
+            <div class="dash__expiry-days" [class]="getDaysClass(item.daysLeft)">
+              <span class="dash__expiry-num">{{ item.daysLeft }}</span>
+              <span class="dash__expiry-lbl">{{ item.daysLeft === 1 ? 'day' : 'days' }}</span>
+            </div>
+            <div style="flex:1">
+              <div class="dash__member-name">{{ item.name }}</div>
+              <div class="dash__member-sport">{{ item.sport }}</div>
+            </div>
+            <button class="dash__renew-btn">Renew</button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="mp-card">
+    <div class="mp-card-header">
+      <span class="mp-card-title">Revenue — Last 6 Months</span>
+      <span class="dash__meta">JD</span>
+    </div>
+    <div class="mp-card-body">
+      @for (r of revenue(); track r.month) {
+        <div class="dash__rev-row">
+          <span class="dash__rev-label">{{ r.month }}</span>
+          <div class="dash__rev-track">
+            <div class="dash__rev-fill" [style.width.%]="getRevenuePercent(r.amount)"></div>
+          </div>
+          <span class="dash__rev-val">{{ r.amount | number }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+﻿.dash {
+  &__metric {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--mp-bg-card); border: 1px solid var(--mp-border);
+    border-radius: var(--mp-radius-lg); padding: 16px; box-shadow: var(--mp-shadow-sm);
+  }
+  &__metric-icon {
+    width: 40px; height: 40px; border-radius: var(--mp-radius-md);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    .material-icons { font-size: 20px; }
+  }
+  &__metric-label { font-size: 11px; color: var(--mp-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  &__metric-value { font-family: var(--mp-font-display); font-size: 22px; font-weight: 700; color: var(--mp-text-primary); line-height: 1.1; margin-bottom: 2px; }
+  &__metric-delta { font-size: 11px; &.up { color: var(--mp-success-text); } &.warn { color: var(--mp-warning-text); } &.down { color: var(--mp-danger-text); } }
+
+  &__quick-actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 22px; }
+  &__qa {
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    padding: 14px 8px; background: var(--mp-bg-card); border: 1px solid var(--mp-border);
+    border-radius: var(--mp-radius-lg); text-decoration: none; color: var(--mp-text-secondary);
+    font-size: 12px; font-weight: 500; transition: all 0.15s; box-shadow: var(--mp-shadow-sm);
+    .material-icons { font-size: 22px; padding: 9px; background: var(--mp-bg-surface); border-radius: var(--mp-radius-md); transition: all 0.15s; }
+    &:hover { border-color: var(--mp-brand); color: var(--mp-brand);
+      .material-icons { background: var(--mp-brand-light); color: var(--mp-brand); } }
+  }
+
+  &__two-col { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 16px; }
+  &__link { font-size: 12px; color: var(--mp-brand); text-decoration: none; }
+  &__meta { font-size: 11px; color: var(--mp-text-muted); }
+
+  &__table {
+    width: 100%; border-collapse: collapse;
+    th { text-align: left; font-size: 10px; font-weight: 500; color: var(--mp-text-muted); letter-spacing: 0.06em; text-transform: uppercase; padding: 10px 14px 8px; background: var(--mp-bg-surface); }
+    td { padding: 9px 14px; border-top: 1px solid var(--mp-border); vertical-align: middle; }
+    tr:hover td { background: var(--mp-bg-surface); }
+  }
+
+  &__member-cell { display: flex; align-items: center; gap: 8px; }
+  &__member-name  { font-size: 12px; font-weight: 500; }
+  &__member-sport { font-size: 10px; color: var(--mp-text-muted); }
+  &__muted        { color: var(--mp-text-secondary); font-size: 12px; }
+  &__strong       { font-weight: 500; font-size: 12px; }
+
+  &__expiry-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 10px;
+    border: 1px solid var(--mp-border); border-radius: var(--mp-radius-md);
+    margin-bottom: 8px; transition: border-color 0.12s;
+    &:last-child { margin-bottom: 0; }
+    &:hover { border-color: var(--mp-border-strong); }
+  }
+  &__expiry-days {
+    width: 40px; height: 40px; border-radius: var(--mp-radius-md);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;
+    &.urgent { background: var(--mp-danger-bg);  color: var(--mp-danger-text);  }
+    &.soon   { background: var(--mp-warning-bg); color: var(--mp-warning-text); }
+  }
+  &__expiry-num { font-family: var(--mp-font-display); font-size: 15px; font-weight: 700; line-height: 1; }
+  &__expiry-lbl { font-size: 9px; font-weight: 500; }
+  &__renew-btn {
+    background: var(--mp-brand-light); color: var(--mp-brand); border: none;
+    border-radius: var(--mp-radius-sm); padding: 4px 10px; font-size: 11px; font-weight: 500; cursor: pointer;
+    &:hover { background: #f5c4b3; }
+  }
+
+  &__rev-row { display: flex; align-items: center; gap: 10px; font-size: 12px; margin-bottom: 8px; &:last-child { margin-bottom: 0; } }
+  &__rev-label { width: 28px; color: var(--mp-text-muted); font-size: 11px; }
+  &__rev-track { flex: 1; height: 7px; background: var(--mp-bg-surface); border-radius: 4px; overflow: hidden; }
+  &__rev-fill  { height: 100%; background: var(--mp-brand); border-radius: 4px; transition: width 0.6s ease; }
+  &__rev-val   { min-width: 50px; text-align: right; color: var(--mp-text-secondary); font-size: 11px; }
+}

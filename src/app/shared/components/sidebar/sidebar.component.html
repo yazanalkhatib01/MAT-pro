@@ -1,0 +1,17 @@
+<aside class="sidebar">
+  <div class="sidebar__logo">
+    <div class="sidebar__logo-icon">M</div>
+    <span class="sidebar__logo-text">MAT<span>PRO</span></span>
+  </div>
+  <nav class="sidebar__nav">
+    @for (section of navSections; track section.label) {
+      <span class="sidebar__section-label">{{ section.label }}</span>
+      @for (item of section.items; track item.route) {
+        <a class="sidebar__item" [routerLink]="item.route" routerLinkActive="sidebar__item--active">
+          <span class="material-icons">{{ item.icon }}</span>
+          {{ item.label }}
+        </a>
+      }
+    }
+  </nav>
+</aside>

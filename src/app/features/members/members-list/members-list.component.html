@@ -1,0 +1,117 @@
+﻿<div class="mp-page">
+
+  <div class="mp-page__header">
+    <div>
+      <h1 class="mp-page__title">Members</h1>
+      <p class="mp-page__subtitle">{{ filteredMembers().length }} of {{ allMembers().length }} members</p>
+    </div>
+    <div class="mp-page__actions">
+      <button class="mp-btn mp-btn--ghost">
+        <span class="material-icons" style="font-size:16px">download</span>
+        Export
+      </button>
+      <button class="mp-btn mp-btn--primary" (click)="showDialog.set(true)">
+        <span class="material-icons" style="font-size:16px">add</span>
+        Add Member
+      </button>
+    </div>
+  </div>
+
+  <div class="members__toolbar">
+    <div class="members__search">
+      <span class="material-icons">search</span>
+      <input
+        type="text"
+        placeholder="Search by name, phone, sport..."
+        [value]="searchQuery()"
+        (input)="onSearch($event)"
+      />
+    </div>
+    <div class="members__filters">
+      @for (f of filters; track f.value) {
+        <button
+          class="members__filter-btn"
+          [class.active]="activeFilter() === f.value"
+          (click)="setFilter(f.value)">
+          {{ f.label }}
+          <span class="members__filter-count">{{ getStatusCount(f.value) }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="mp-card">
+    <table class="members__table">
+      <thead>
+        <tr>
+          <th>Member</th>
+          <th>Phone</th>
+          <th>Sport</th>
+          <th>Status</th>
+          <th>Joined</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (m of filteredMembers(); track m.id) {
+          <tr>
+            <td>
+              <div class="members__member-cell">
+                <div class="mp-avatar" [style.background]="getAvatarColor(m.fullName)">
+                  {{ getInitials(m.fullName) }}
+                </div>
+                <div>
+                  <div class="members__name">{{ m.fullName }}</div>
+                  <div class="members__id">ID #{{ m.id }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="members__muted">{{ m.phone }}</td>
+            <td><span class="members__sport-tag">{{ m.sport?.name }}</span></td>
+            <td>
+              <span class="mp-badge"
+                [class.mp-badge--active]="m.status === 'active'"
+                [class.mp-badge--expiring]="m.status === 'expiring'"
+                [class.mp-badge--expired]="m.status === 'expired'">
+                {{ m.status }}
+              </span>
+            </td>
+            <td class="members__muted">{{ m.createdAt }}</td>
+            <td>
+              <div class="members__actions">
+                <button class="members__action-btn" title="View"><span class="material-icons">visibility</span></button>
+                <button class="members__action-btn" title="Edit"><span class="material-icons">edit</span></button>
+                <button class="members__action-btn members__action-btn--danger" title="Delete"><span class="material-icons">delete</span></button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="members__empty">
+              <span class="material-icons">search_off</span>
+              <p>No members found</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <div class="members__pagination">
+      <span class="members__pagination-info">Showing {{ filteredMembers().length }} results</span>
+      <div class="members__pagination-btns">
+        <button class="members__page-btn"><span class="material-icons">chevron_left</span></button>
+        <button class="members__page-btn members__page-btn--active">1</button>
+        <button class="members__page-btn">2</button>
+        <button class="members__page-btn">3</button>
+        <button class="members__page-btn"><span class="material-icons">chevron_right</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (showDialog()) {
+  <app-member-form-dialog
+    (closed)="showDialog.set(false)"
+    (saved)="onMemberSaved($event)">
+  </app-member-form-dialog>
+}
+

@@ -1,0 +1,67 @@
+﻿<div class="dialog-backdrop" (click)="close()">
+  <div class="dialog" (click)="$event.stopPropagation()">
+    <div class="dialog__header">
+      <div>
+        <h2 class="dialog__title">Add New Member</h2>
+        <p class="dialog__subtitle">Fill in the member details below</p>
+      </div>
+      <button class="dialog__close" (click)="close()"><span class="material-icons">close</span></button>
+    </div>
+    <div class="dialog__body">
+      <div class="form-group">
+        <label class="form-label">Full Name <span class="required">*</span></label>
+        <input class="form-input" [class.error]="errors.fullName" type="text" placeholder="e.g. Ahmad Al-Hassan" [(ngModel)]="form.fullName"/>
+        @if (errors.fullName) { <span class="form-error">{{ errors.fullName }}</span> }
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Phone <span class="required">*</span></label>
+          <input class="form-input" [class.error]="errors.phone" type="tel" placeholder="+962 79 XXX XXXX" [(ngModel)]="form.phone"/>
+          @if (errors.phone) { <span class="form-error">{{ errors.phone }}</span> }
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" placeholder="email@example.com" [(ngModel)]="form.email"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date of Birth</label>
+          <input class="form-input" type="date" [(ngModel)]="form.dateOfBirth"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender <span class="required">*</span></label>
+          <select class="form-input" [class.error]="errors.gender" [(ngModel)]="form.gender">
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          @if (errors.gender) { <span class="form-error">{{ errors.gender }}</span> }
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sport <span class="required">*</span></label>
+        <div class="sport-grid">
+          @for (sport of sports; track sport.id) {
+            <button type="button" class="sport-btn" [class.active]="form.sportId === sport.id" (click)="form.sportId = sport.id">{{ sport.name }}</button>
+          }
+        </div>
+        @if (errors.notes) { <span class="form-error">Sport is required</span> }
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-input form-textarea" placeholder="Any additional notes..." [(ngModel)]="form.notes" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="dialog__footer">
+      <button class="mp-btn mp-btn--ghost" (click)="close()">Cancel</button>
+      <button class="mp-btn mp-btn--primary" [disabled]="isSubmitting()" (click)="onSubmit()">
+        @if (isSubmitting()) {
+          <span class="material-icons spinning">autorenew</span> Saving...
+        } @else {
+          <span class="material-icons" style="font-size:16px">check</span> Save Member
+        }
+      </button>
+    </div>
+  </div>
+</div>
