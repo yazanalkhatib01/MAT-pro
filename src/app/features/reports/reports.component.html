@@ -1,0 +1,92 @@
+﻿<div class="mp-page">
+  <div class="mp-page__header">
+    <div>
+      <h1 class="mp-page__title">Reports</h1>
+      <p class="mp-page__subtitle">Membership, revenue and growth overview</p>
+    </div>
+    <div class="mp-page__actions">
+      <button class="mp-btn mp-btn--ghost">
+        <span class="material-icons" style="font-size:16px">download</span> Export PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="rep__tabs">
+    <button class="rep__tab" [class.active]="activeTab() === 'revenue'" (click)="activeTab.set('revenue')">Revenue</button>
+    <button class="rep__tab" [class.active]="activeTab() === 'members'" (click)="activeTab.set('members')">Members</button>
+    <button class="rep__tab" [class.active]="activeTab() === 'memberships'" (click)="activeTab.set('memberships')">Memberships</button>
+  </div>
+
+  @if (activeTab() === 'revenue') {
+    <div class="rep__section">
+      <div class="mp-metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+        <div class="rep__stat"><div class="rep__stat-label">This Month</div><div class="rep__stat-value">JD 4,280</div><div class="rep__stat-delta up">+12.3% vs last month</div></div>
+        <div class="rep__stat"><div class="rep__stat-label">Last Month</div><div class="rep__stat-value">JD 3,810</div><div class="rep__stat-delta up">+1.3% vs prev</div></div>
+        <div class="rep__stat"><div class="rep__stat-label">Year to Date</div><div class="rep__stat-value">JD 21,850</div><div class="rep__stat-delta up">On track</div></div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-card-header"><span class="mp-card-title">Monthly Revenue — 2026</span></div>
+        <div class="mp-card-body">
+          @for (r of revenueData(); track r.month) {
+            <div class="rep__bar-row">
+              <span class="rep__bar-label">{{ r.month }}</span>
+              <div class="rep__bar-track">
+                <div class="rep__bar-fill" [style.width.%]="getBarPercent(r.amount)" [style.background]="r.isCurrentMonth ? '#C8392B' : '#E8B4AE'"></div>
+              </div>
+              <span class="rep__bar-val">JD {{ r.amount | number }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab() === 'members') {
+    <div class="rep__section">
+      <div class="mp-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+        <div class="rep__stat"><div class="rep__stat-label">Total Members</div><div class="rep__stat-value">142</div><div class="rep__stat-delta up">+8 this month</div></div>
+        <div class="rep__stat"><div class="rep__stat-label">New This Month</div><div class="rep__stat-value">8</div><div class="rep__stat-delta up">+60% vs last</div></div>
+        <div class="rep__stat"><div class="rep__stat-label">Active</div><div class="rep__stat-value">118</div><div class="rep__stat-delta up">83%</div></div>
+        <div class="rep__stat"><div class="rep__stat-label">Churned</div><div class="rep__stat-value">5</div><div class="rep__stat-delta down">This month</div></div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-card-header"><span class="mp-card-title">Members by Sport</span></div>
+        <div class="mp-card-body">
+          @for (s of sportStats(); track s.name) {
+            <div class="rep__sport-row">
+              <span class="rep__sport-name">{{ s.name }}</span>
+              <div class="rep__bar-track" style="flex:1">
+                <div class="rep__bar-fill" [style.width.%]="getSportPercent(s.count)" [style.background]="s.color"></div>
+              </div>
+              <span class="rep__sport-count">{{ s.count }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (activeTab() === 'memberships') {
+    <div class="rep__section">
+      <div class="mp-metrics" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+        <div class="rep__stat"><div class="rep__stat-label">Active</div><div class="rep__stat-value" style="color:#3B6D11">118</div><div class="rep__stat-delta up">83% of total</div></div>
+        <div class="rep__stat"><div class="rep__stat-label">Expiring (7 days)</div><div class="rep__stat-value" style="color:#854F0B">14</div><div class="rep__stat-delta down">Need renewal</div></div>
+        <div class="rep__stat"><div class="rep__stat-label">Expired</div><div class="rep__stat-value" style="color:#A32D2D">24</div><div class="rep__stat-delta down">17% of total</div></div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-card-header"><span class="mp-card-title">Plan Distribution</span></div>
+        <div class="mp-card-body">
+          @for (p of planStats(); track p.name) {
+            <div class="rep__sport-row">
+              <span class="rep__sport-name">{{ p.name }}</span>
+              <div class="rep__bar-track" style="flex:1">
+                <div class="rep__bar-fill" [style.width.%]="getPlanPercent(p.count)" [style.background]="'#C8392B'"></div>
+              </div>
+              <span class="rep__sport-count">{{ p.count }} members</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

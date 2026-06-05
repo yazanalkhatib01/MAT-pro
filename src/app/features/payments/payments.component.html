@@ -1,0 +1,85 @@
+﻿<div class="mp-page">
+  <div class="mp-page__header">
+    <div>
+      <h1 class="mp-page__title">Payments</h1>
+      <p class="mp-page__subtitle">All payment records and invoices</p>
+    </div>
+    <div class="mp-page__actions">
+      <button class="mp-btn mp-btn--ghost">
+        <span class="material-icons" style="font-size:16px">download</span> Export
+      </button>
+      <button class="mp-btn mp-btn--primary">
+        <span class="material-icons" style="font-size:16px">add</span> Add Payment
+      </button>
+    </div>
+  </div>
+
+  <div class="mp-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:22px">
+    <div class="pay__stat-card"><div class="pay__stat-label">Today</div><div class="pay__stat-value">JD {{ todayRevenue() }}</div><div class="pay__stat-sub">{{ todayCount() }} transactions</div></div>
+    <div class="pay__stat-card"><div class="pay__stat-label">This Month</div><div class="pay__stat-value">JD {{ monthRevenue() }}</div><div class="pay__stat-sub pay__stat-sub--up">+12% vs last</div></div>
+    <div class="pay__stat-card"><div class="pay__stat-label">Pending</div><div class="pay__stat-value" style="color:#854F0B">JD {{ pendingAmount() }}</div><div class="pay__stat-sub">{{ pendingCount() }} invoices</div></div>
+    <div class="pay__stat-card"><div class="pay__stat-label">Total Payments</div><div class="pay__stat-value">{{ payments().length }}</div><div class="pay__stat-sub">All time</div></div>
+  </div>
+
+  <div class="pay__toolbar">
+    <div class="pay__search">
+      <span class="material-icons">search</span>
+      <input type="text" placeholder="Search by member or invoice..." [value]="searchQuery()" (input)="onSearch($event)"/>
+    </div>
+    <div class="pay__filters">
+      @for (f of filters; track f.value) {
+        <button class="pay__filter-btn" [class.active]="activeFilter() === f.value" (click)="activeFilter.set(f.value)">
+          {{ f.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="mp-card">
+    <table class="pay__table">
+      <thead>
+        <tr><th>Invoice</th><th>Member</th><th>Plan</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (p of filteredPayments(); track p.id) {
+          <tr>
+            <td class="pay__invoice">{{ p.invoiceNumber }}</td>
+            <td>
+              <div class="pay__member-cell">
+                <div class="mp-avatar mp-avatar--sm" [style.background]="getAvatarColor(p.memberName)">{{ getInitials(p.memberName) }}</div>
+                <div class="pay__member-name">{{ p.memberName }}</div>
+              </div>
+            </td>
+            <td class="pay__muted">{{ p.planName }}</td>
+            <td class="pay__amount">JD {{ p.amount }}</td>
+            <td>
+              <div class="pay__method">
+                <span class="material-icons">{{ getMethodIcon(p.method) }}</span>
+                {{ p.method }}
+              </div>
+            </td>
+            <td class="pay__muted">{{ p.paidAt }}</td>
+            <td>
+              <span class="mp-badge"
+                [class.mp-badge--active]="p.status === 'paid'"
+                [class.mp-badge--expiring]="p.status === 'pending'"
+                [class.mp-badge--expired]="p.status === 'refunded'">
+                {{ p.status }}
+              </span>
+            </td>
+            <td>
+              <button class="pay__action-btn" title="View Invoice">
+                <span class="material-icons">receipt</span>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="8" class="pay__empty"><span class="material-icons">payments</span><p>No payments found</p></td></tr>
+        }
+      </tbody>
+    </table>
+    <div class="pay__footer">
+      <span class="pay__footer-info">Showing {{ filteredPayments().length }} of {{ payments().length }} payments</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+﻿<div class="mp-page">
+  <div class="mp-page__header">
+    <div>
+      <h1 class="mp-page__title">Sports</h1>
+      <p class="mp-page__subtitle">Manage disciplines offered at the club</p>
+    </div>
+    <div class="mp-page__actions">
+      <button class="mp-btn mp-btn--primary">
+        <span class="material-icons" style="font-size:16px">add</span> Add Sport
+      </button>
+    </div>
+  </div>
+
+  <div class="sports__grid">
+    @for (sport of sports(); track sport.id) {
+      <div class="sports__card" [class.inactive]="sport.status === 'inactive'">
+        <div class="sports__card-header">
+          <div class="sports__icon" [style.background]="sport.color + '22'" [style.color]="sport.color">
+            <span class="material-icons">sports_martial_arts</span>
+          </div>
+          <span class="mp-badge"
+            [class.mp-badge--active]="sport.status === 'active'"
+            [class.mp-badge--expired]="sport.status === 'inactive'">
+            {{ sport.status }}
+          </span>
+        </div>
+        <div class="sports__name">{{ sport.name }}</div>
+        <div class="sports__members"><span class="material-icons">group</span> {{ sport.memberCount }} members</div>
+        <div class="sports__actions">
+          <button class="mp-btn mp-btn--ghost" style="flex:1;font-size:12px" (click)="toggleStatus(sport)">
+            {{ sport.status === 'active' ? 'Deactivate' : 'Activate' }}
+          </button>
+          <button class="mp-btn mp-btn--ghost">
+            <span class="material-icons" style="font-size:15px">edit</span>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

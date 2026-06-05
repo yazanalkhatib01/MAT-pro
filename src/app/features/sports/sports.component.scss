@@ -1,0 +1,14 @@
+﻿.sports {
+  &__grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+  &__card {
+    background:var(--mp-bg-card); border:1px solid var(--mp-border); border-radius:var(--mp-radius-lg);
+    padding:20px; box-shadow:var(--mp-shadow-sm); transition:all .15s;
+    &:hover { box-shadow:0 4px 16px rgba(0,0,0,0.1); }
+    &.inactive { opacity:.55; }
+  }
+  &__card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  &__icon { width:44px; height:44px; border-radius:var(--mp-radius-md); display:flex; align-items:center; justify-content:center; .material-icons{font-size:22px;} }
+  &__name { font-family:var(--mp-font-display); font-size:15px; font-weight:700; color:var(--mp-text-primary); margin-bottom:6px; }
+  &__members { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--mp-text-secondary); margin-bottom:16px; .material-icons{font-size:14px;} }
+  &__actions { display:flex; gap:8px; }
+}

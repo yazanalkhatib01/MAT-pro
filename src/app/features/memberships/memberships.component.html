@@ -1,0 +1,105 @@
+﻿<div class="mp-page">
+  <div class="mp-page__header">
+    <div>
+      <h1 class="mp-page__title">Memberships</h1>
+      <p class="mp-page__subtitle">Plans and active subscriptions</p>
+    </div>
+    <div class="mp-page__actions">
+      <button class="mp-btn mp-btn--primary">
+        <span class="material-icons" style="font-size:16px">add</span> New Plan
+      </button>
+    </div>
+  </div>
+
+  <div class="mp-metrics" style="grid-template-columns:repeat(4,1fr);margin-bottom:22px">
+    <div class="mem__stat-card"><div class="mem__stat-label">Total Plans</div><div class="mem__stat-value">{{ plans().length }}</div></div>
+    <div class="mem__stat-card"><div class="mem__stat-label">Active Members</div><div class="mem__stat-value">{{ activeMemberships().length }}</div></div>
+    <div class="mem__stat-card"><div class="mem__stat-label">Expiring Soon</div><div class="mem__stat-value" style="color:#854F0B">{{ expiringCount() }}</div></div>
+    <div class="mem__stat-card"><div class="mem__stat-label">Total Revenue</div><div class="mem__stat-value">JD {{ totalActiveRevenue() }}</div></div>
+  </div>
+
+  <div class="mem__tabs">
+    <button class="mem__tab" [class.active]="activeTab() === 'plans'" (click)="activeTab.set('plans')">Membership Plans</button>
+    <button class="mem__tab" [class.active]="activeTab() === 'active'" (click)="activeTab.set('active')">Active Subscriptions</button>
+  </div>
+
+  @if (activeTab() === 'plans') {
+    <div class="mem__plans-grid">
+      @for (plan of plans(); track plan.id) {
+        <div class="mem__plan-card" [class.inactive]="plan.status === 'inactive'">
+          <div class="mem__plan-header">
+            <div>
+              <div class="mem__plan-name">{{ plan.name }}</div>
+              <div class="mem__plan-duration">{{ plan.duration }}</div>
+            </div>
+            <span class="mp-badge"
+              [class.mp-badge--active]="plan.status === 'active'"
+              [class.mp-badge--expired]="plan.status === 'inactive'">
+              {{ plan.status }}
+            </span>
+          </div>
+          <div class="mem__plan-price">JD {{ plan.price }}<span class="mem__plan-per"> / {{ plan.duration }}</span></div>
+          <div class="mem__plan-meta"><span class="material-icons">group</span> {{ plan.memberCount }} members</div>
+          <div class="mem__plan-actions">
+            <button class="mp-btn mp-btn--ghost" style="flex:1" (click)="togglePlanStatus(plan)">
+              {{ plan.status === 'active' ? 'Deactivate' : 'Activate' }}
+            </button>
+            <button class="mp-btn mp-btn--ghost">
+              <span class="material-icons" style="font-size:16px">edit</span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (activeTab() === 'active') {
+    <div class="mp-card">
+      <table class="mem__table">
+        <thead>
+          <tr><th>Member</th><th>Plan</th><th>Start</th><th>End</th><th>Days Left</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+          @for (m of activeMemberships(); track m.id) {
+            <tr>
+              <td>
+                <div class="mem__member-cell">
+                  <div class="mp-avatar mp-avatar--sm" [style.background]="getAvatarColor(m.memberName)">
+                    {{ getInitials(m.memberName) }}
+                  </div>
+                  <div>
+                    <div class="mem__name">{{ m.memberName }}</div>
+                    <div class="mem__sport">{{ m.sport }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="mem__muted">{{ m.planName }}</td>
+              <td class="mem__muted">{{ m.startDate }}</td>
+              <td class="mem__muted">{{ m.endDate }}</td>
+              <td>
+                <div class="mem__days-cell">
+                  <span class="mem__days-num" [style.color]="getDaysBarColor(m.status)">{{ m.daysLeft }}d</span>
+                  <div class="mem__days-bar">
+                    <div class="mem__days-fill"
+                      [style.width.%]="getDaysBarWidth(m.daysLeft)"
+                      [style.background]="getDaysBarColor(m.status)">
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="mp-badge"
+                  [class.mp-badge--active]="m.status === 'active'"
+                  [class.mp-badge--expiring]="m.status === 'expiring'"
+                  [class.mp-badge--expired]="m.status === 'expired'">
+                  {{ m.status }}
+                </span>
+              </td>
+              <td><button class="mem__renew-btn">Renew</button></td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
